@@ -13,7 +13,7 @@ after a specified lifetime (in milliseconds). Trading safety for convenience and
 
 ## When should you use it?
 
-tmalloc is useful when memory lifetimes are naturally time-bounded:
+**tmalloc** is useful when memory lifetimes are naturally time-bounded:
 
 - Temporary buffers
 - Game / real-time engine allocations
@@ -23,7 +23,7 @@ tmalloc is useful when memory lifetimes are naturally time-bounded:
 
 ## When should you avoid it?
 
-tmalloc is not recommended for:
+**tmalloc** is not recommended for:
 
 - Long-lived variables or global states
 - Public APIs that expose tmalloc pointers
@@ -54,6 +54,33 @@ See [`tmalloc.h`](include/tmalloc.h) for documentation.
 > - All functions are thread safe
 > - Spawns a single background reaper thread on first use
 > - Automatic freeing is best-effort and platform-dependent, averages ~1ms accuracy
+
+
+## Build instructions
+
+**tmalloc** uses CMake to build, please follow the following steps to build the static library:
+
+### Requirements
+
+- C compiler (GCC, Clang, or MSVC)
+- CMake 3.10+
+
+### Build steps
+
+1. **Clone the repository**
+
+    ```bash
+    git clone https://github.com/Hudson111-s/tmalloc.git
+    cd tmalloc
+    ```
+
+
+2. **Build**
+
+    ```bash
+    cmake -S . -B build
+    cmake --build build
+    ```
 
 
 ## Contribution
