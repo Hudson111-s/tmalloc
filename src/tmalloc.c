@@ -5,7 +5,6 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <stdint.h>
-#include <stdbool.h>
 #include <time.h>
 
 static tm_mutex_t lock;
@@ -68,14 +67,4 @@ void tfree(void *ptr) {
     mutex_unlock(&lock);
 
     free(ptr);
-}
-
-bool tvalid(void *ptr) {
-    if (ptr == NULL) return 0;
-    if (run_thread_once(&thread_once, tm_global_init) != 1) return 0;
-
-    mutex_lock(&lock);
-    bool found = heap_contains(ptr);
-    mutex_unlock(&lock);
-    return found;
 }

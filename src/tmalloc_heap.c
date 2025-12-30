@@ -2,7 +2,6 @@
 #include <stdint.h>
 #include <stdlib.h>
 #include <stdio.h>
-#include <stdbool.h>
 
 static TimedMalloc *heap = NULL;
 static size_t heap_capacity = 0;
@@ -17,7 +16,7 @@ static void swap(TimedMalloc *tm1, TimedMalloc *tm2) {
 static void heap_up(int index) {
     while (index > 0) {
         int parent_index = (index - 1) / 2;
-        if (heap[parent_index].lifetime_end <= heap[index].lifetime_end) break;;
+        if (heap[parent_index].lifetime_end <= heap[index].lifetime_end) break;
 
         swap(&heap[parent_index], &heap[index]);
         index = parent_index;
@@ -83,15 +82,6 @@ void heap_free(void *ptr) {
             return;
         }
     }
-}
-
-bool heap_contains(void *ptr) {
-    for (int i = 0; i < heap_size; i++) {
-        if (heap[i].ptr == ptr) {
-            return true;
-        }
-    }
-    return false;
 }
 
 TimedMalloc heap_peek() {

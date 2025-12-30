@@ -40,9 +40,7 @@ after a specified lifetime (in milliseconds). Trading safety for convenience and
 int *value = tmalloc(sizeof(int), 5000); // valid for ~5 seconds
 *value = 42;
 
-if (tvalid(value)) {
-    printf("%d\n", *value);
-}
+printf("%d\n", *value);
 
 // Optional manual free.
 tfree(value);

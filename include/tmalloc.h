@@ -24,14 +24,6 @@ void *tmalloc(size_t size, uint64_t lifetime_ms);
  */
 void tfree(void *ptr);
 
-/**
- * Checks whether a pointer returned by tmalloc is still valid.
- *
- * @param ptr Pointer returned by tmalloc
- * @return true if the allocation has not expired or been freed
- */
-bool tvalid(void *ptr);
-
 #ifdef __cplusplus
 }
 #endif
