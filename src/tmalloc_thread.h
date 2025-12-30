@@ -21,5 +21,5 @@ typedef pthread_once_t tm_once_init_t;
 void mutex_init(tm_mutex_t *m);
 void mutex_lock(tm_mutex_t *m);
 void mutex_unlock(tm_mutex_t *m);
-void init_reaper(void (*reaper)(void));
+void reaper_init(void (*reaper)(void));
 int run_thread_once(tm_once_init_t *flag, void (*func)(void));

@@ -29,7 +29,7 @@ static DWORD WINAPI reaper_thread_thunk(LPVOID param) {
     return 0;
 }
 
-void init_reaper(void (*reaper)(void)) {
+void reaper_init(void (*reaper)(void)) {
     HANDLE hThread = CreateThread(
         NULL,
         0, 
@@ -61,7 +61,7 @@ void mutex_unlock(tm_mutex_t *m) {
     pthread_mutex_unlock(m);
 }
 
-void init_reaper(void (*reaper)(void)) {
+void reaper_init(void (*reaper)(void)) {
     pthread_t thread_id;
     void *(*reaper_cast)(void *) = (void *(*)(void *))reaper;
 

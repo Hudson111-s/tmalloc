@@ -37,7 +37,7 @@ static void reaper(void) {
 
 static void tm_global_init(void) {
     mutex_init(&lock); 
-    init_reaper(reaper);
+    reaper_init(reaper);
 }
 
 void *tmalloc(size_t size, uint64_t lifetime_ms) {
