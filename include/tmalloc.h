@@ -15,7 +15,7 @@ extern "C" {
  *
  * @return Pointer to allocated memory, or NULL on failure
  */
-void *tmalloc(size_t size, uint64_t lifetime_ms);
+void *tmalloc(size_t size, int64_t lifetime_ms);
 
 /**
  * Frees memory previously allocated by tmalloc before it expires.

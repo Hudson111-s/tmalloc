@@ -59,15 +59,18 @@ static inline void cpu_pause() {
 #else
 #include <unistd.h>
 #include <sched.h>
+#include <errno.h>
 #include <time.h>
 
 /* Sleeps for ms milliseconds. */
 static inline void sleep_ms(uint64_t ms) {
+    if (ms == 0) return;
+
     struct timespec ts;
     ts.tv_sec = ms / 1000;
     ts.tv_nsec = (ms % 1000) * 1000000;
 
-    while (clock_nanosleep(CLOCK_MONOTONIC, TIMER_ABSTIME, &ts, NULL) != 0);
+    while (nanosleep(&ts, &ts) == -1 && errno == EINTR);
 }
 
 /* Gets time in milliseconds. */

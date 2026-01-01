@@ -40,13 +40,14 @@ static void tm_global_init(void) {
     reaper_init(reaper);
 }
 
-void *tmalloc(size_t size, uint64_t lifetime_ms) {
+void *tmalloc(size_t size, int64_t lifetime_ms) {
+    if (lifetime_ms <= 0) return NULL;
     if (run_thread_once(&thread_once, tm_global_init) != 1) return NULL;
 
     void *ptr = malloc(size);
     if (ptr == NULL) return NULL;
 
-    TimedMalloc tm = {ptr, time_ms() + lifetime_ms};
+    TimedMalloc tm = {ptr, time_ms() + (uint64_t)lifetime_ms};
     mutex_lock(&lock);
     if (heap_push(tm) != 0) {
         free(ptr);
