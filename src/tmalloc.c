@@ -12,24 +12,30 @@ static tm_once_init_t thread_once = TM_ONCE_INIT;
 
 static void reaper(void) {
     while(1) {
-        uint64_t now = time_ms();
-        
         mutex_lock(&lock);
-        while (get_heap_size() > 0 && heap_peek().lifetime_end <= now) {
+        while (get_heap_size() > 0 && heap_peek().lifetime_end <= time_ms()) {
             TimedMalloc ex = heap_pop();
+            mutex_unlock(&lock);
             free(ex.ptr);
+            mutex_lock(&lock);
         }
 
         uint64_t sleep_tms = SLEEP_INIT;
         uint64_t next_lifetime = UINT64_MAX;
         if (get_heap_size() > 0) {
             next_lifetime = heap_peek().lifetime_end;
-            sleep_tms = (next_lifetime > now) ? next_lifetime - now : SLEEP_MIN;
+            sleep_tms = (next_lifetime > time_ms()) ? next_lifetime - time_ms() : SLEEP_MIN;
         }
         mutex_unlock(&lock);
 
         if (sleep_tms > 2) sleep_ms(sleep_tms - 1);
-        while (get_heap_size() > 0 && time_ms() < next_lifetime) {
+        while (1) {
+            mutex_lock(&lock);
+            int empty = (get_heap_size() == 0);
+            next_lifetime = heap_peek().lifetime_end;
+            mutex_unlock(&lock);
+
+            if (empty || time_ms() >= next_lifetime) break;
             cpu_pause();
         }
     }
@@ -50,8 +56,8 @@ void *tmalloc(size_t size, int64_t lifetime_ms) {
     TimedMalloc tm = {time_ms() + (uint64_t)lifetime_ms, ptr};
     mutex_lock(&lock);
     if (heap_push(tm) != 0) {
-        free(ptr);
         mutex_unlock(&lock);
+        free(ptr);
         return NULL;
     }
     mutex_unlock(&lock);
