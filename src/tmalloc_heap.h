@@ -7,8 +7,8 @@
 #define HEAP_INIT_CAPACITY 16
 
 typedef struct TimedMalloc {
+    uint64_t lifetime_end;
     void *ptr;
-    uint64_t lifetime_end;    
 } TimedMalloc;
 
 size_t get_heap_size();

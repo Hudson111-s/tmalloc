@@ -16,10 +16,9 @@ void mutex_unlock(tm_mutex_t *m) {
     LeaveCriticalSection(m);
 }
 
-typedef struct { void (*func)(void); } init_once_t;
 static BOOL CALLBACK PinitOnceFn(PINIT_ONCE InitOnce, PVOID Parameter, PVOID *Context) {
-    init_once_t *io = (init_once_t *)Parameter;
-    io->func();
+    void (*func)(void) = (void (*)(void))Parameter;
+    func();
     return TRUE;
 }
 
@@ -42,8 +41,7 @@ void reaper_init(void (*reaper)(void)) {
 }
 
 int run_thread_once(tm_once_init_t *flag, void (*func)(void)) {
-    init_once_t io = {func};
-    return (InitOnceExecuteOnce(flag, PinitOnceFn, &io, NULL) != 0);
+    return (InitOnceExecuteOnce(flag, PinitOnceFn, func, NULL) != 0);
 }
 
 #else
