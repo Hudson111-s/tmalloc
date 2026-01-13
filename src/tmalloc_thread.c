@@ -17,6 +17,9 @@ void mutex_unlock(tm_mutex_t *m) {
 }
 
 static BOOL CALLBACK PinitOnceFn(PINIT_ONCE InitOnce, PVOID Parameter, PVOID *Context) {
+    (void)InitOnce; // Cast to silences warnings
+    (void)Context;
+
     void (*func)(void) = (void (*)(void))Parameter;
     func();
     return TRUE;

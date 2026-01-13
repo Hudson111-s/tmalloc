@@ -29,9 +29,9 @@ static void heap_down(int index) {
         int right = (index * 2) + 2;
         int smallest = index;
 
-        if (heap_size > left && heap[index].lifetime_end > heap[left].lifetime_end) {
+        if (heap_size > (size_t)left && heap[index].lifetime_end > heap[left].lifetime_end) {
             smallest = left;
-        } else if (heap_size > right && heap[index].lifetime_end > heap[right].lifetime_end) {
+        } else if (heap_size > (size_t)right && heap[index].lifetime_end > heap[right].lifetime_end) {
             smallest = right;
         }
         if (smallest == index) break;
@@ -73,7 +73,7 @@ int heap_push(TimedMalloc tm) {
 }
 
 void heap_free(void *ptr) {
-    for (int i = 0; i < heap_size; i++) {
+    for (int i = 0; (size_t)i < heap_size; i++) {
         if (heap[i].ptr == ptr) {
             heap[i] = heap[--heap_size];
 
