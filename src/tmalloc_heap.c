@@ -13,17 +13,24 @@ static void swap(TimedMalloc *tm1, TimedMalloc *tm2) {
     *tm2 = temp;
 }
 
-static void heap_up(int index) {
+static int heap_up(int index) {
+    int swapped = 0;
+
     while (index > 0) {
         int parent_index = (index - 1) / 2;
         if (heap[parent_index].lifetime_end <= heap[index].lifetime_end) break;
 
         swap(&heap[parent_index], &heap[index]);
+        swapped = 1;
         index = parent_index;
     }
+
+    return swapped;
 }
 
-static void heap_down(int index) {
+static int heap_down(int index) {
+    int swapped = 0;
+
     while (1) {
         int left = (index * 2) + 1;
         int right = (index * 2) + 2;
@@ -37,8 +44,11 @@ static void heap_down(int index) {
         if (smallest == index) break;
 
         swap(&heap[smallest], &heap[index]);
+        swapped = 1;
         index = smallest;
     }
+
+    return swapped;
 }
 
 TimedMalloc heap_pop() {
@@ -77,9 +87,8 @@ void heap_free(void *ptr) {
         if (heap[i].ptr == ptr) {
             heap[i] = heap[--heap_size];
 
-            heap_up(i);
+            if (heap_up(i)) return;
             heap_down(i);
-            return;
         }
     }
 }
