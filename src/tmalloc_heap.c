@@ -36,9 +36,10 @@ static int heap_down(int index) {
         int right = (index * 2) + 2;
         int smallest = index;
 
-        if (heap_size > (size_t)left && heap[index].lifetime_end > heap[left].lifetime_end) {
+        if (heap_size > (size_t)left && heap[smallest].lifetime_end > heap[left].lifetime_end) {
             smallest = left;
-        } else if (heap_size > (size_t)right && heap[index].lifetime_end > heap[right].lifetime_end) {
+        } 
+        if (heap_size > (size_t)right && heap[smallest].lifetime_end > heap[right].lifetime_end) {
             smallest = right;
         }
         if (smallest == index) break;
@@ -58,7 +59,7 @@ TimedMalloc heap_pop() {
     heap_size--;
 
     if (heap_size > 0) {
-        heap[0] = heap[heap_size - 1];
+        heap[0] = heap[heap_size];
         heap_down(0);
     }
     
@@ -76,8 +77,8 @@ int heap_push(TimedMalloc tm) {
     }
 
     heap[heap_size] = tm;
-    heap_up((int)heap_size);
     heap_size++;
+    heap_up((int)heap_size);
 
     return 0;
 }
@@ -87,8 +88,8 @@ void heap_free(void *ptr) {
         if (heap[i].ptr == ptr) {
             heap[i] = heap[--heap_size];
 
-            if (heap_up(i)) return;
-            heap_down(i);
+            if (!heap_up(i)) heap_down(i);
+            return;
         }
     }
 }
