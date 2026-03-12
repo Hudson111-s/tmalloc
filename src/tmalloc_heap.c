@@ -1,7 +1,8 @@
-#include "tmalloc_heap.h"
 #include <stdint.h>
 #include <stdlib.h>
 #include <stdio.h>
+
+#include "tmalloc_heap.h"
 
 static TimedMalloc *heap = NULL;
 static size_t heap_capacity = 0;

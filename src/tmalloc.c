@@ -1,11 +1,12 @@
-#include "tmalloc.h"
-#include "tmalloc_time.h"
-#include "tmalloc_heap.h"
-#include "tmalloc_thread.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <stdint.h>
 #include <time.h>
+
+#include "tmalloc.h"
+#include "tmalloc_time.h"
+#include "tmalloc_heap.h"
+#include "tmalloc_thread.h"
 
 static tm_mutex_t lock;
 static tm_once_init_t thread_once = TM_ONCE_INIT;
