@@ -13,7 +13,6 @@ static tm_cond_t cv;
 static tm_once_init_t thread_once = TM_ONCE_INIT;
 
 static void reaper(void) {
-    uint64_t real_now = time_ms();
     mutex_lock(&lock);
     while (1) {
         // Wait until there is at least one allocation.

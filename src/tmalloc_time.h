@@ -11,6 +11,10 @@ static LARGE_INTEGER freq;
 static INIT_ONCE once = INIT_ONCE_STATIC_INIT;
 
 static BOOL CALLBACK init_freq(PINIT_ONCE InitOnce, PVOID Param, PVOID *Context) {
+    (void)InitOnce;
+    (void)Param;
+    (void)Context;
+
     QueryPerformanceFrequency(&freq);
     return TRUE;
 }

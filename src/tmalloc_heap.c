@@ -93,6 +93,7 @@ int heap_free(void *ptr) {
             return 0;
         }
     }
+    return -1;
 }
 
 TimedMalloc heap_peek() {
