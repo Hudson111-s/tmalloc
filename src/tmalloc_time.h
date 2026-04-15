@@ -1,87 +1,38 @@
 #pragma once
+
 #include <stdint.h>
 
-#define SLEEP_INIT 10 // Default sleep in ms
-#define SLEEP_MIN 1
+#define WAIT_THRESHOLD 15
 
 #if defined(_WIN32) || defined(_WIN64)
 #include <windows.h>
-#ifdef _MSC_VER
-#include <immintrin.h>
-#endif
 
-#ifndef CREATE_WAITABLE_TIMER_HIGH_RESOLUTION
-#define CREATE_WAITABLE_TIMER_HIGH_RESOLUTION 0x00000002
-#endif
+static LARGE_INTEGER freq;
+static INIT_ONCE once = INIT_ONCE_STATIC_INIT;
 
-/* Sleeps for ms milliseconds. */
-static inline void sleep_ms(uint64_t ms) {
-    if (ms == 0) return;
-
-    static HANDLE hTimer = NULL;
-    if (hTimer == NULL) {
-        hTimer = CreateWaitableTimerExW(NULL, NULL, CREATE_WAITABLE_TIMER_HIGH_RESOLUTION, TIMER_ALL_ACCESS);
-    }
-
-    if (hTimer) {
-        LARGE_INTEGER due_time;
-        due_time.QuadPart = -(int64_t)(ms * 10000); 
-
-        SetWaitableTimer(hTimer, &due_time, 0, NULL, NULL, FALSE);
-        WaitForSingleObject(hTimer, INFINITE);
-    } else {
-        Sleep((DWORD)ms);
-    }
+static BOOL CALLBACK init_freq(PINIT_ONCE InitOnce, PVOID Param, PVOID *Context) {
+    QueryPerformanceFrequency(&freq);
+    return TRUE;
 }
 
 /* Gets time in milliseconds since boot. */
 static inline uint64_t time_ms() {
-    static LARGE_INTEGER freq;
-    static int initialized = 0;
-    if (!initialized) {
-        QueryPerformanceFrequency(&freq);
-        initialized = 1;
-    }
+    InitOnceExecuteOnce(&once, init_freq, NULL, NULL);
 
     LARGE_INTEGER counter;
     QueryPerformanceCounter(&counter);
+
     return (uint64_t)((counter.QuadPart * 1000) / freq.QuadPart);
 }
 
-static inline void cpu_pause() {
-#ifdef _MSC_VER
-    _mm_pause(); // Does not yield
 #else
-    SwitchToThread();
-#endif
-}
-
-#else
-#include <unistd.h>
-#include <sched.h>
-#include <errno.h>
 #include <time.h>
 
-/* Sleeps for ms milliseconds. */
-static inline void sleep_ms(uint64_t ms) {
-    if (ms == 0) return;
-
-    struct timespec ts;
-    ts.tv_sec = ms / 1000;
-    ts.tv_nsec = (ms % 1000) * 1000000;
-
-    while (nanosleep(&ts, &ts) == -1 && errno == EINTR);
-}
-
-/* Gets time in milliseconds. */
+/* Gets time in milliseconds since boot. */
 static inline uint64_t time_ms() {
     struct timespec ts;
     clock_gettime(CLOCK_MONOTONIC, &ts);
     return (uint64_t)ts.tv_sec * 1000 + (uint64_t)(ts.tv_nsec / 1000000);
-}
-
-static inline void cpu_pause() {
-    sched_yield();
 }
 
 #endif

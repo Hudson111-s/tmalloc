@@ -1,5 +1,7 @@
 #pragma once
 
+#include <stdint.h>
+
 #if defined(_WIN32) || defined(_WIN64)
 #include <windows.h>
 
@@ -7,6 +9,7 @@
 
 typedef CRITICAL_SECTION tm_mutex_t;
 typedef INIT_ONCE tm_once_init_t;
+typedef CONDITION_VARIABLE tm_cond_t;
 
 #else
 #include <pthread.h>
@@ -15,11 +18,16 @@ typedef INIT_ONCE tm_once_init_t;
 
 typedef pthread_mutex_t tm_mutex_t;
 typedef pthread_once_t tm_once_init_t;
+typedef pthread_cond_t tm_cond_t;
 
 #endif
 
 void mutex_init(tm_mutex_t *m);
 void mutex_lock(tm_mutex_t *m);
 void mutex_unlock(tm_mutex_t *m);
+void cond_init(tm_cond_t *c);
+void cond_signal(tm_cond_t *c);
+void cond_wait(tm_cond_t *c, tm_mutex_t *m);
+void cond_timedwait(tm_cond_t *c, tm_mutex_t *m, uint64_t lifetime_end);
 void reaper_init(void (*reaper)(void));
 int run_thread_once(tm_once_init_t *flag, void (*func)(void));
