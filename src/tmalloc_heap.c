@@ -78,21 +78,22 @@ int heap_push(TimedMalloc tm) {
     }
 
     heap[heap_size] = tm;
-    heap_size++;
     heap_up((int)heap_size);
+    heap_size++;
 
     return 0;
 }
 
-void heap_free(void *ptr) {
+int heap_free(void *ptr) {
     for (int i = 0; (size_t)i < heap_size; i++) {
         if (heap[i].ptr == ptr) {
             heap[i] = heap[--heap_size];
 
             if (!heap_up(i)) heap_down(i);
-            return;
+            return 0;
         }
     }
+    return -1;
 }
 
 TimedMalloc heap_peek() {

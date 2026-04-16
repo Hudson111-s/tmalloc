@@ -11,6 +11,10 @@ add_library(tmalloc STATIC
 )
 
 target_include_directories(tmalloc PUBLIC include)
+target_compile_definitions(tmalloc PRIVATE
+    _POSIX_C_SOURCE=200809L
+    _GNU_SOURCE
+)
 
 target_link_libraries(tmalloc PUBLIC Threads::Threads)
 
