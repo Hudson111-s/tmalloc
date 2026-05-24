@@ -1,5 +1,9 @@
-cmake_minimum_required(VERSION 3.10)
+cmake_minimum_required(VERSION 3.15)
 project(tmalloc C)
+
+set(CMAKE_C_STANDARD 11)
+set(CMAKE_C_STANDARD_REQUIRED ON)
+set(CMAKE_C_EXTENSIONS OFF)
 
 set(THREADS_PREFER_PTHREAD_FLAG ON)
 find_package(Threads REQUIRED)
@@ -19,17 +23,6 @@ target_compile_definitions(tmalloc PRIVATE
 target_link_libraries(tmalloc PUBLIC Threads::Threads)
 
 target_compile_options(tmalloc PRIVATE
-    $<$<OR:$<C_COMPILER_ID:GNU>,$<C_COMPILER_ID:Clang>,$<C_COMPILER_ID:AppleClang>>:
-        -Wall -Wextra
-    >
-    $<$<C_COMPILER_ID:MSVC>:
-        /W4 /WX
-        /wd4152
-    >
-)
-
-set_target_properties(tmalloc PROPERTIES
-    C_STANDARD 11
-    C_STANDARD_REQUIRED ON
-    C_EXTENSIONS OFF
+    $<$<COMPILE_LANG_AND_ID:C,GNU,Clang,AppleClang>: -Wall -Wextra > 
+    $<$<COMPILE_LANG_AND_ID:C,MSVC>: /W4 /WX /wd4152 >
 )
