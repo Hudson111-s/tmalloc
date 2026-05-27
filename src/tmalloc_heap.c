@@ -1,6 +1,7 @@
-#include <stdint.h>
-#include <stdlib.h>
 #include <stdio.h>
+#include <stdint.h>
+#include <stdbool.h>
+#include <stdlib.h>
 
 #include "tmalloc_heap.h"
 
@@ -14,8 +15,8 @@ static void swap(TimedMalloc *tm1, TimedMalloc *tm2) {
     *tm2 = temp;
 }
 
-static int heap_up(int index) {
-    int swapped = 0;
+static bool heap_up(int index) {
+    bool swapped = 0;
 
     while (index > 0) {
         int parent_index = (index - 1) / 2;
@@ -29,8 +30,8 @@ static int heap_up(int index) {
     return swapped;
 }
 
-static int heap_down(int index) {
-    int swapped = 0;
+static bool heap_down(int index) {
+    bool swapped = 0;
 
     while (1) {
         int left = (index * 2) + 1;
