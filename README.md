@@ -61,7 +61,7 @@ See [`tmalloc.h`](include/tmalloc.h) for documentation.
 ### Requirements
 
 - C compiler (GCC, Clang, or MSVC)
-- CMake 3.10+
+- CMake 3.15+
 
 ### Build steps
 
