@@ -23,6 +23,6 @@ target_compile_definitions(tmalloc PRIVATE
 target_link_libraries(tmalloc PUBLIC Threads::Threads)
 
 target_compile_options(tmalloc PRIVATE
-    $<$<COMPILE_LANG_AND_ID:C,GNU,Clang,AppleClang>: -Wall -Wextra > 
+    $<$<COMPILE_LANG_AND_ID:C,GNU,Clang,AppleClang>: -Wall -Wextra -Werror > 
     $<$<COMPILE_LANG_AND_ID:C,MSVC>: /W4 /WX /wd4152 >
 )

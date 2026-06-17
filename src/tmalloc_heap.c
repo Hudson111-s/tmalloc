@@ -16,14 +16,14 @@ static void swap(TimedMalloc *tm1, TimedMalloc *tm2) {
 }
 
 static bool heap_up(int index) {
-    bool swapped = 0;
+    bool swapped = false;
 
     while (index > 0) {
         int parent_index = (index - 1) / 2;
         if (heap[parent_index].lifetime_end <= heap[index].lifetime_end) break;
 
         swap(&heap[parent_index], &heap[index]);
-        swapped = 1;
+        swapped = true;
         index = parent_index;
     }
 
@@ -31,7 +31,7 @@ static bool heap_up(int index) {
 }
 
 static bool heap_down(int index) {
-    bool swapped = 0;
+    bool swapped = false;
 
     while (1) {
         int left = (index * 2) + 1;
@@ -47,7 +47,7 @@ static bool heap_down(int index) {
         if (smallest == index) break;
 
         swap(&heap[smallest], &heap[index]);
-        swapped = 1;
+        swapped = true;
         index = smallest;
     }
 
@@ -86,9 +86,12 @@ int heap_push(TimedMalloc tm) {
 }
 
 int heap_free(void *ptr) {
-    for (int i = 0; (size_t)i < heap_size; i++) {
+    for (size_t i = 0; i < heap_size; i++) {
         if (heap[i].ptr == ptr) {
             heap[i] = heap[--heap_size];
+
+            // Check if i is the last element.
+            if (i == heap_size) return 0;
 
             if (!heap_up(i)) heap_down(i);
             return 0;
