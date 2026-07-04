@@ -1,15 +1,12 @@
 > [!WARNING]  
 > This project is still in development and may be unstable.
 
-
 # tmalloc
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg?style=for-the-badge)](LICENSE)
-
 
 **tmalloc** is a C library that provides a time-based memory allocator.
 It behaves like `malloc`, except allocated memory is automatically freed
 after a specified lifetime (in milliseconds). Trading safety for convenience and control.
-
 
 ## When should you use it?
 
@@ -20,7 +17,6 @@ after a specified lifetime (in milliseconds). Trading safety for convenience and
 - Networking code (request buffers, timeouts, session state)
 - Prototyping or experimental systems
 
-
 ## When should you avoid it?
 
 **tmalloc** is not recommended for:
@@ -30,7 +26,6 @@ after a specified lifetime (in milliseconds). Trading safety for convenience and
 - Safety-critical systems
 - Code that assumes pointers remain valid indefinitely
 - Replacing malloc
-
 
 ## Usage
 
@@ -53,7 +48,6 @@ See [`tmalloc.h`](include/tmalloc.h) for documentation.
 > - Spawns a single background reaper thread on first use
 > - Automatic freeing is best-effort and platform-dependent, averages ~1ms accuracy
 
-
 ## Build instructions
 
 **tmalloc** uses CMake to build, please follow the following steps to build the static library:
@@ -72,7 +66,6 @@ See [`tmalloc.h`](include/tmalloc.h) for documentation.
     cd tmalloc
     ```
 
-
 2. **Build**
 
     ```bash
@@ -80,11 +73,9 @@ See [`tmalloc.h`](include/tmalloc.h) for documentation.
     cmake --build build
     ```
 
-
 ## Contribution
 
 Contributions are very welcome! Feel free to open [issues](https://github.com/Hudson111-s/tmalloc/issues) or submit [pull requests](https://github.com/Hudson111-s/tmalloc/pulls).
-
 
 ## Author
 
