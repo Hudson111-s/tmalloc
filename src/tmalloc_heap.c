@@ -92,8 +92,8 @@ int heap_free(void *ptr) {
 
             // Check if i is the last element.
             if (i == heap_size) return 0;
-
-            if (!heap_up(i)) heap_down(i);
+            
+            if (!heap_up((int)i)) heap_down((int)i);
             return 0;
         }
     }
