@@ -2,8 +2,6 @@
 
 #include <stdint.h>
 
-#define WAIT_THRESHOLD 15
-
 #if defined(_WIN32) || defined(_WIN64)
 #include <windows.h>
 
@@ -26,7 +24,8 @@ static inline uint64_t time_ms() {
     LARGE_INTEGER counter;
     QueryPerformanceCounter(&counter);
 
-    return (uint64_t)((counter.QuadPart * 1000) / freq.QuadPart);
+    return (uint64_t)(counter.QuadPart / freq.QuadPart) * 1000
+         + (uint64_t)(counter.QuadPart % freq.QuadPart) * 1000 / freq.QuadPart;
 }
 
 #else

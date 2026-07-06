@@ -27,7 +27,7 @@ static void reaper(void) {
 
             if (next_lifetime > now) {
                 // Wait until next_lifetime expiration or a signal.
-                cond_timedwait(&cv, &lock, next_lifetime - WAIT_THRESHOLD);
+                cond_timedwait(&cv, &lock, next_lifetime);
                 continue;
             }
 
