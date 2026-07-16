@@ -4,7 +4,7 @@
 # tmalloc
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg?style=for-the-badge)](LICENSE)
 
-**tmalloc** is a C library that provides a time-based memory allocator.
+**tmalloc** is a cross-platform (Linux and Windows) C library that provides a time-based memory allocator.
 It behaves like `malloc`, except allocated memory is automatically freed
 after a specified lifetime (in milliseconds). Trading safety for convenience and control.
 
@@ -46,11 +46,12 @@ See [`tmalloc.h`](include/tmalloc.h) for documentation.
 > [!NOTE]
 > - All functions are thread safe
 > - Spawns a single background reaper thread on first use
-> - Automatic freeing is best-effort and platform-dependent, averages ~1ms accuracy
+> - Automatic freeing is best-effort and platform-dependent
 
 ## Build instructions
 
-**tmalloc** uses CMake to build, please follow the following steps to build the static library:
+**tmalloc** works on both Linux and Windows and uses CMake as its build system. 
+Follow these steps to build the static library:
 
 ### Requirements
 
@@ -72,6 +73,72 @@ See [`tmalloc.h`](include/tmalloc.h) for documentation.
     cmake -S . -B build
     cmake --build build
     ```
+
+This builds the static library. You can link it manually into another project, 
+or install it for use with `find_package()` as described below.
+
+3. **Install**
+
+    ```bash
+    cmake --install build
+    ```
+
+> [!NOTE]  
+> Running `cmake --install build` without `--prefix` installs to `CMAKE_INSTALL_PREFIX`.
+> If you do not want the default install location use the `--prefix <path/to/dir>` flag.
+> If you install to a non-default location, CMake will not search that location automatically, 
+> so you will have to set `-DCMAKE_PREFIX_PATH=<path/to/install>` when creating your project.
+
+## Example of using tmalloc in another CMake project
+
+To use tmalloc in any CMake project see the example below:
+
+### Install tmalloc
+
+```bash
+git clone https://github.com/Hudson111-s/tmalloc.git
+cd tmalloc
+cmake -S . -B build
+cmake --build build
+cmake --install build --prefix ~/code/project1/install
+cd ~/code/project1
+```
+
+Now you should have:
+
+```bash
+~/code/project1/install
+├── include/
+│   └── tmalloc.h
+├── lib/
+│   ├── libtmalloc.a
+│   └── cmake/
+│       └── tmalloc/
+│           ├── tmallocConfig.cmake
+│           ├── tmallocConfigVersion.cmake
+│           └── tmallocTargets.cmake
+```
+
+### Add to CMakeLists.txt
+
+```cmake
+find_package(tmalloc REQUIRED)
+
+add_executable(my_program
+    main.c
+)
+
+target_link_libraries(my_program PRIVATE
+    tmalloc::tmalloc
+)
+```
+
+### Configure and build project
+
+```bash
+cmake -S . -B build -DCMAKE_PREFIX_PATH=~/code/project1/install
+cmake --build build
+```
 
 ## Contribution
 
